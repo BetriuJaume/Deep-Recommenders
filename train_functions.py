@@ -258,7 +258,8 @@ def run_pop_model(full_dataset, data_loader, hparams):
 
     ############ TEST FUNCTION
     HR, NDCG = [], []
-    for user_test in full_dataset.test_set:
+    #for user_test in full_dataset.test_set:
+    for user_test in tqdm(full_dataset.test_set):
         gt_item = user_test[0][1]
 
         # extract the list of recomendations for each user:

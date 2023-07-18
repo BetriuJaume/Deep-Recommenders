@@ -61,7 +61,7 @@ Firstly, clone this repository to your local machine.
 
 To run the project, you have two options: Using `(1) Conda Environment` or perform a `(2) manual installation`:
 
-### 1. Conda Environment
+### 1. Conda Environment (Only Linux)
 
 If you have Anaconda or Miniconda installed, you can import the `recommender_system_conda.yml` file to automatically set up the environment with all the required dependencies. This eliminates the need to install the `requirements.txt` file.
 
