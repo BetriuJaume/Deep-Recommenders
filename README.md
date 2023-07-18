@@ -10,17 +10,16 @@ Final Project for the UPC Artificial Intelligence with Deep Learning Postgraduat
 ## Table of Contents (Provisional)
 
 * [Introduction](#intro)
-* [Overview](#overview)
-    * [Setup & Usage](#setup_usage)
-    * [Architectures](#architecture)
-      * [Random](#architecture)
-      * [Popularity](#popularity)
-      * [Collaborative Based Filtering](#collab_filter)
-      * [Content Based Filtering](#content_filter)
-      * [Techniques explored](#tech_exp)
-    * [Dataset](#dataset)
-      * [Preprocessing](#data_features)
-      * [Negative sampling](#data_neg)
+* [Setup & Usage](#setup_usage)
+* [Architectures](#architectures_usage)
+    * [Random](#random_arch)
+    * [Popularity](#pop_arch)
+    * [Collaborative Based Filtering](#collab_arch)
+    * [Content Based Filtering](#content_arch)
+    * [Techniques explored](#tech_exp)
+* [Dataset](#dataset)
+    * [Preprocessing](#data_features)
+    * [Negative sampling](#data_neg)
 * [Metrics for evaluation](#metrics)
     * [Hit rate](#hitrate)
     * [Intralist (NDCG)](#intralist)
@@ -28,7 +27,7 @@ Final Project for the UPC Artificial Intelligence with Deep Learning Postgraduat
 * [CF Models Exploration:: Understanding and Comparison](#explore)
     * [Random](#random)
     * [Popularity](#popularity)
-    * [Matrix Factorizacion and Factorization Machine Model (FM)](#fm_model)
+    * [Matrix Factorization and Factorization Machine Model (FM)](#fm_model)
     * [Graphical Convolutional Network Model (GCN)](#gcn_model)
     * [Bias problems](#bias)
         * [Cold start](#cold_start)
@@ -36,8 +35,11 @@ Final Project for the UPC Artificial Intelligence with Deep Learning Postgraduat
         * [Scalability](#scale)
         * [Non-interpretable results](#nonint)
         * [Data hungry](#datahung)
-    * [Deep Learning Models (DL)](#deep_model)
-        * [Our proposal](#dl_model)
+* [Deep Learning Models (DL)](#deep_models)
+    * [Proposed deep architectures](#deep_arch)
+        * [Deep Model](#dl_model)
+        * [Residual Model](#res_model)
+        * [Compact Model](#compact_model)
 * [Results](#results)
 * [Conclusions](#conclusion)
 * [References](#references)
@@ -133,24 +135,24 @@ If you use online streaming services to watch films, such as Prime or Netflix, p
 
 These expressions respond to the method which the recommendation are based:
 
-[1] **Random**:
+[1] **Random**: <a name="random_arch" ></a>
 This is one of the simplest methods, usually selected when new user. A list of k items is randomly selected from the whole item dataset.
 
 ![](https://hackmd.io/_uploads/H1KdpUnt2.jpg)
 
-[2] **Popularity**:
+[2] **Popularity**: <a name="pop_arch" ></a>
 This is the second simplest method, user thinks that most viewed items tend to be "the better". We want to be part of the group so if many others have seen I have to see it as well. 
 
 ![](https://hackmd.io/_uploads/SyJ2_PhK3.jpg)
 
 
-[3] **Collaborative** Based Filtering (CF)
+[3] **Collaborative** Based Filtering (CF) <a name="collab_arch" ></a>
 This model uses the opinion to recommend items identifying other users with similar taste.
 This is the most mature technique and also the most common, we will see more in detail the reasons.
 
 ![](https://hackmd.io/_uploads/BkT4_v2th.png)
 
-[4] **Content** Based Filtering (CBF)
+[4] **Content** Based Filtering (CBF) <a name="content_arch" ></a>
 The content-based model tries to “understand” why a user interacts with an item: because of user features (as age, genre, address, job), might be the item features (duration, theme, violence, actors…) or any other personal information.
 This has a high computational cost because to deal with the large amount of features, the content is limited because it depends on the information that user provide, so normally there is overspecialization and sparsity of data.
 
@@ -199,11 +201,11 @@ After the dataset records each user-item interaction as positive, there are no l
 
 ![](https://hackmd.io/_uploads/Sy_CyhCY3.png=120x180)
 
-# Metrics for evaluation
+# Metrics for evaluation <a name="metrics" ></a>
 The main and clear evidence that our model is working properly is the accuracy given by the Hit rate, but there are other metrics that helps us to interpret what is going on in our system.
 
 ## Hit rate <a name="hitrate"></a>
-If k are the first items that our recommender outputs, hit rate is how many times the output appears in one theses k positions. The next example shows the 10 items of our GT corresponding to user 1, and as we see in the figure the first item supposed to be clicked is 14966.
+If k are the first items that our recommender outputs, hit rate is how many times the output appears in one of these k positions. The next example shows the 10 items of our GT corresponding to user 1, and as we see in the figure the first item supposed to be clicked is 14966.
 
 ![](https://hackmd.io/_uploads/Hk9uXA0th.png=150x150)
 
@@ -228,9 +230,9 @@ The coverage metric is determined by the ratio of unique items recommended by th
 
 <!--![](https://hackmd.io/_uploads/BJHj6sAth.png)-->
 
-# CF Models Exploration:: Understanding and Comparison <a name=""></a>
+# CF Models Exploration:: Understanding and Comparison <a name="explore"></a>
 
-## Random model:
+## Random model: <a name="random"></a>
 The random model suggests 10 movies randomly to the user. Considering its nature, we anticipate poor performance from this model. Indeed, the results are as follows:
 
 | Hit ratio 10 | NDCG     | Coverage |
@@ -238,7 +240,7 @@ The random model suggests 10 movies randomly to the user. Considering its nature
 | 0.1001       | 0.0451     | 100%   |
 
 
-## Popularity models:
+## Popularity models: <a name="popularity"></a>
 We have implemented two different popularity models. The absolute popularity model returns the top 10 most popular movies in the whole dataset. If we run this model we obtain the metrics:
 
 | Hit ratio 10 | NDCG | Coverage |
@@ -251,13 +253,13 @@ On the other hand, if we recommend the top 10 most popular movies from the list 
 | -------- | -------- | -------- |
 | 0.59     | 0.31     |   19%   |
 
-## Matrix Factorizacion and Factorization Machine Model (FM)<a name=""></a>
+## Matrix Factorizacion and Factorization Machine Model (FM)<a name="fm_model"></a>
 Matrix factorization (MF) is a technique that consists in decompose a matrix in two smaller arrays. 
-With this operation the system learns about the preferences of user and the features of the items. So we have a huge matrix of user-item that we want to separate in a matrix of users and a matrix of items. These two arrays are called *latent factor embedding* or what we know as embeddings, they contain the factors that determine the profile of a user and relates it to an item properties.
-The next figure explain this process, it has been extrated from [T1].
+With this operation the system learns about the preferences of user and the features of the items. So we have a huge matrix of user-item that we want to separate in a matrix of users and a matrix of items. These two arrays are called *latent factor embedding* or what we know as embeddings, they contain the factors that determine the profile of a user and relates it to item properties.
+The next figure explain this process, it has been extracted from [T1].
 ![](https://hackmd.io/_uploads/Syvxp1kqh.png)
-Simple and effective but only works with explicit data and it's not possible to add extra features as CBF.
-In our dataset we use positive and negative sampling, the behaviour of a user is modelled implicitly. We need another more general model framework that can deal with the drawbacks of MF, called <b>Factorization Machines</b>. The next figure explain this process, it has been extracted from [T1].
+Simple and effective but only works with explicit data, and it's not possible to add extra features as CBF.
+In our dataset we use positive and negative sampling, the behavior of a user is modelled implicitly. We need another more general model framework that can deal with the drawbacks of MF, called <b>Factorization Machines</b>. The next figure explain this process, it has been extracted from [T1].
 ![](https://hackmd.io/_uploads/ByPs4xk93.png)
 <b>Factorization Machines (FM)</b> is an extension of Matrix Factorization that allows capturing higher order interactions between variables in a machine learning model. Unlike Matrix Factorization, Factorization Machines are capable of modeling non-linear interactions between features using factorization techniques.
 Instead of working directly with latent factor matrices, they use feature combinations to represent higher-order interactions. These combinations are generated by factoring the cross products of the original features. The next equation has been implemented:
@@ -269,7 +271,7 @@ Here we can see the results obtained in our FM model:
 | -------- | -------- | -------- |
 | 0.3374     | 0.1713   | 45,81% |
 
-## Graph Convolutional Network Model (GCN)<a name=""></a>
+## Graph Convolutional Network Model (GCN)<a name="gcn_model"></a>
 
 As the structures become more complex, another approach can be used in combination with FM that it's called Graph Convolutional Networks (GCN). GCN are more beneficial when working in some of the following scenarios:
 - Graph structure: In many cases, recommender systems may have additional information in the form of a graph that represents relationships between users, items, or other entities. For example, there may be social connections between users or similarity relationships between items. GCNs are designed to take advantage of this structure of the graph and capture richer and more contextually significant patterns and relationships.
@@ -292,11 +294,11 @@ There are two categories of cold-start:
     1. During the start-up of a recommender, the users have not interacted yet with the listed items, so there are no history to compare. 
     2. The same situation occurs when a new item is added or when a new user sings up into the system, there are no interactions. 
 Due to the high number of investigations that have been developed, there are a lot of strategies to mitigate this effect. 
-A common strategy when dealing with new items is to combine a collaborative filtering recommender for warm items with a content-based filtering recommender for cold items. This approach is to rely on hybrid recommenders (HR). Hybrid models can combine CBF and CF or switch between them depending on the needings.
+A common strategy when dealing with new items is to combine a collaborative filtering recommender for warm items with a content-based filtering recommender for cold items. This approach is to rely on hybrid recommenders (HR). Hybrid models can combine CBF and CF or switch between them depending on the needs.
 Another option is ask to the user for explicit data and another strategy ethically questionable is integrating information from other user activities, such as browsing histories or social media platforms.
 When new user or item is added, as we have seen, GCN can solve this task.
 
-- <b>Filter bubbles: </b><a name="fil_bub"></a>
+- <b>Filter bubbles: </b><a name="filbub"></a>
 It pertains to a scenario where users of a recommender system find themselves confined within an information bubble. This occurs when they predominantly receive recommendations that closely match their preferences, which consequently restricts their exposure to a diverse range of perspectives and content.
 Two major approaches are commonly used: 
     1. Incorporation of contextual information: In addition to a user's preferences, recommender systems can use additional contextual information, such as geographic location, time, current trends, or overall popularity, to broaden the diversity of recommendations. This allows you to consider the context in which the recommendation is made and offer more varied options.
@@ -314,7 +316,7 @@ Recommender systems based on machine learning algorithms, often need a sufficien
 The model known as the *Deeper Model* operates on deeper layers within these systems, surpassing traditional ones by virtue of its enhanced processing capabilities. These models can be customized for specific tasks, effectively handling non-linear data by incorporating multiple approaches into a single system. Despite the limited data availability, we anticipate that the focus will be primarily on improving accuracy.
 
 
-## Deep Models (DL)<a name="deep_models"></a>
+# Deep Learning Models (DL)<a name="deep_models"></a>
 
 These deeper models have an architecture with multiple hidden layers, allowing them to learn more sophisticated features and patterns:
 
@@ -328,10 +330,10 @@ These deeper models have an architecture with multiple hidden layers, allowing t
 
 - Greater generalizability: Deeper models typically have greater generalizability, allowing them to better adapt to new or previously unseen data. Through multiple layers, these models can learn richer and more flexible representations, allowing them to better generalize to different scenarios and test cases.
 
-## Proposed deep architectures
+## Proposed deep architectures <a name="deep_arch"></a>
 To fully explore the capabilities of deeper models, we introduce three distinct network architectures designed by us.
 
-### Deep model:
+### Deep model: <a name="dl_model"></a>
 
 
 ![](https://hackmd.io/_uploads/S1-dJEW92.png)
@@ -355,7 +357,7 @@ We can see that the model begins to overfit around the 25th batch so by doing an
 | -------- | -------- | -------- |
 |  0.68  | 0.61     | 50%
 
-### Residual model:
+### Residual model: <a name="res_model"></a>
 
 ![](https://hackmd.io/_uploads/SJQeD4-ch.png)
 
@@ -372,18 +374,18 @@ and training we obtain:
 
 ![](https://hackmd.io/_uploads/BJ8afBbch.png)
 
-We can see that the model overfits faster than the previous one. In this case from the 18th batch. By doing an early stopagge we obtain the following test metrics:
+We can see that the model overfits faster than the previous one. In this case from the 18th batch. By doing an early stoppage we obtain the following test metrics:
 
 | Hit ratio 10 | NDCG | Coverage |
 | -------- | -------- | -------- |
 |  0.52  | 0.30     | 90%        |
 
 
-### Compact model:
+### Compact model: <a name="compact_model"></a>
 
 ![](https://hackmd.io/_uploads/SyjQNSW9n.png)
 
-The compact model is the simplest of the three architectures. This model eliminates the two fully connected layers that we had after the embedings in the deep model.
+The compact model is the simplest of the three architectures. This model eliminates the two fully connected layers that we had after the embeddings in the deep model.
 
 Setting the following hyperparameters
 - **batch size:** 500000
@@ -415,7 +417,7 @@ and training we obtain:
 
 In the provided table, we observe that both the Hit Ratio (HR) metrics and NDCG values are similar for the random and ABS popularity models. Upon examining the user_test and recommendation list, it becomes apparent that approximately 65% of the movie_ids are greater than 10,000. Typically, an NDCG value close to 1 indicates highly relevant and well-ordered recommendations, while a value close to 0 suggests less relevant or disorganized recommendations. In other words, the recommender system is providing recommendations with a low likelihood of being useful or interesting to users, resulting in a low HR compared to other models.
 
-When utilizing the second versions of the popularity model, the smaller setlist size increases the probability of a match, as observed. However, considering the coverage metric reveals a significantly worse result because our system only encompasses a small fraction of the entire available item base. Over time, this limited coverage can lead to a decrease in the quality of recommendations, contributing to the problem of the filter bubble.
+When utilizing the second versions of the popularity model, the smaller set list size increases the probability of a match, as observed. However, considering the coverage metric reveals a significantly worse result because our system only encompasses a small fraction of the entire available item base. Over time, this limited coverage can lead to a decrease in the quality of recommendations, contributing to the problem of the filter bubble.
 
 Initially, when employing more advanced data analysis techniques such as the factorization machine model, notable improvements are observed. This is reflected in a HR of 33% and an increased NDCG score, indicating a reduction in the filter bubble issue.
 
