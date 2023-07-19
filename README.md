@@ -7,7 +7,7 @@ Final Project for the UPC Artificial Intelligence with Deep Learning Postgraduat
 * Team Advisor: [Paula Gomez Duran](paulagomezduran@gmail.com)
 * Date: July 2023
 
-## Table of Contents (Provisional)
+## Table of Contents
 
 * [Introduction](#intro)
 * [Setup & Usage](#setup_usage)
